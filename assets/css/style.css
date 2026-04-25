@@ -284,39 +284,169 @@ p  { margin: 0 0 1rem; }
 }
 .cards { display: grid; gap: 20px; grid-template-columns: 1fr; }
 
-/* ---------- Services ---------- */
+/* ---------- Services (Material-style coloured cards) ---------- */
 .services { background: var(--c-bg-alt); }
-.services-grid { gap: 20px; }
-.service-card {
-  position: relative;
-  padding: 28px 24px;
-  border-radius: 18px;
-  border: 1px solid var(--c-line);
-  background: #fff;
-}
-.service-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-.service-icon {
-  width: 56px; height: 56px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 14px;
-  font-size: 1.6rem;
-  margin-bottom: 14px;
-}
-.service-card h3 { margin-bottom: 8px; color: var(--c-navy); }
-.service-card p { color: var(--c-text-muted); margin: 0; }
+.services-grid { gap: 24px; }
 
-.service-blue   { background: linear-gradient(180deg,#fff,#fff); border-color: var(--s-blue-bd);   }
-.service-blue   .service-icon { background: var(--s-blue-bg);   color: var(--s-blue-ic);   }
-.service-green  { border-color: var(--s-green-bd);  }
-.service-green  .service-icon { background: var(--s-green-bg);  color: var(--s-green-ic);  }
-.service-amber  { border-color: var(--s-amber-bd);  }
-.service-amber  .service-icon { background: var(--s-amber-bg);  color: var(--s-amber-ic);  }
-.service-violet { border-color: var(--s-violet-bd); }
-.service-violet .service-icon { background: var(--s-violet-bg); color: var(--s-violet-ic); }
-.service-rose   { border-color: var(--s-rose-bd);   }
-.service-rose   .service-icon { background: var(--s-rose-bg);   color: var(--s-rose-ic);   }
-.service-teal   { border-color: var(--s-teal-bd);   }
-.service-teal   .service-icon { background: var(--s-teal-bg);   color: var(--s-teal-ic);   }
+.service-card {
+  /* Per-card themeable tokens (overridden by .service-* modifiers) */
+  --card-accent:    var(--c-accent);
+  --card-tint-1:    #ffffff;
+  --card-tint-2:    #f3f5f9;
+  --card-border:    var(--c-line);
+  --card-shadow:    rgba(15,31,61,0.10);
+  --icon-bg-from:   #eef1f6;
+  --icon-bg-to:     #d9dfeb;
+  --icon-color:     var(--c-navy);
+
+  position: relative;
+  padding: 36px 26px 28px;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: linear-gradient(160deg, var(--card-tint-1) 0%, var(--card-tint-2) 100%);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    0 1px 2px rgba(15,31,61,0.06),
+    0 6px 14px rgba(15,31,61,0.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+/* Top accent bar */
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: var(--card-accent);
+  border-radius: 20px 20px 0 0;
+}
+
+/* Soft tinted blob in upper-right corner */
+.service-card::after {
+  content: "";
+  position: absolute;
+  top: -90px; right: -90px;
+  width: 240px; height: 240px;
+  background: radial-gradient(closest-side, var(--card-accent) 0%, transparent 70%);
+  opacity: 0.08;
+  z-index: -1;
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 2px rgba(15,31,61,0.06),
+    0 22px 40px var(--card-shadow);
+}
+.service-card:hover::after {
+  opacity: 0.14;
+  transform: scale(1.05);
+}
+
+.service-icon {
+  width: 64px; height: 64px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 18px;
+  font-size: 1.8rem;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, var(--icon-bg-from) 0%, var(--icon-bg-to) 100%);
+  color: var(--icon-color);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    0 8px 18px var(--card-shadow);
+  position: relative;
+  z-index: 1;
+}
+
+.service-card h3 {
+  margin-bottom: 10px;
+  color: var(--c-navy);
+  position: relative;
+  z-index: 1;
+}
+.service-card p {
+  color: var(--c-text-muted);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ----- Per-service colour themes (Material-inspired shades) ----- */
+
+/* Vedení účetnictví — Soft Blue */
+.service-blue {
+  --card-accent:  #1e63d4;
+  --card-tint-1:  #ffffff;
+  --card-tint-2:  #e3edfc;
+  --card-border:  #cfe0fb;
+  --card-shadow:  rgba(30,99,212,0.20);
+  --icon-bg-from: #cfe0fb;
+  --icon-bg-to:   #7ba8f2;
+  --icon-color:   #103e8a;
+}
+
+/* Daňové poradenství — Soft Green */
+.service-green {
+  --card-accent:  #1d7a4c;
+  --card-tint-1:  #ffffff;
+  --card-tint-2:  #dff2e6;
+  --card-border:  #c0e6cf;
+  --card-shadow:  rgba(29,122,76,0.20);
+  --icon-bg-from: #c9eadb;
+  --icon-bg-to:   #7ec5a3;
+  --icon-color:   #0e4d2d;
+}
+
+/* Mzdová agenda — Soft Amber */
+.service-amber {
+  --card-accent:  #b07514;
+  --card-tint-1:  #ffffff;
+  --card-tint-2:  #fcecc8;
+  --card-border:  #f1d99c;
+  --card-shadow:  rgba(176,117,20,0.22);
+  --icon-bg-from: #f5e0b0;
+  --icon-bg-to:   #e7b766;
+  --icon-color:   #6e4506;
+}
+
+/* Daňová evidence — Soft Violet */
+.service-violet {
+  --card-accent:  #5b3fb6;
+  --card-tint-1:  #ffffff;
+  --card-tint-2:  #ebe5fb;
+  --card-border:  #d6c9f3;
+  --card-shadow:  rgba(91,63,182,0.22);
+  --icon-bg-from: #dccff7;
+  --icon-bg-to:   #a692e0;
+  --icon-color:   #3a2780;
+}
+
+/* Komunikace s úřady — Soft Rose / Peach */
+.service-rose {
+  --card-accent:  #b04a2f;
+  --card-tint-1:  #ffffff;
+  --card-tint-2:  #fde2db;
+  --card-border:  #f5c6b9;
+  --card-shadow:  rgba(176,74,47,0.20);
+  --icon-bg-from: #f7d2c9;
+  --icon-bg-to:   #e9a591;
+  --icon-color:   #7a2c17;
+}
+
+/* Roční zúčtování — Soft Teal */
+.service-teal {
+  --card-accent:  #136b6a;
+  --card-tint-1:  #ffffff;
+  --card-tint-2:  #d6ecea;
+  --card-border:  #b5dcd9;
+  --card-shadow:  rgba(19,107,106,0.20);
+  --icon-bg-from: #c0e3e1;
+  --icon-bg-to:   #79beba;
+  --icon-color:   #0a4847;
+}
 
 /* ---------- About ---------- */
 .about-grid {

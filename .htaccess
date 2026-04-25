@@ -74,16 +74,23 @@ Options -Indexes
 # ----- Custom 404 -----
 ErrorDocument 404 /index.html
 
-# ----- HTTPS redirect (DISABLED by default) -----
-# Uncomment AFTER you confirm SSL is active for ucto-pe.online,
-# otherwise this can cause an infinite redirect loop on some setups.
-#
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{HTTPS} !=on
-#   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
-#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-# </IfModule>
+# ----- HTTPS redirect -----
+# Forces all HTTP traffic to HTTPS. Both conditions are required so it
+# also works on hosts that terminate SSL on a proxy (X-Forwarded-Proto).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Strict-Transport-Security — only set on HTTPS responses to avoid
+# sending HSTS headers over plain HTTP (which browsers ignore anyway).
+<IfModule mod_headers.c>
+  <If "%{HTTPS} == 'on'">
+    Header always set Strict-Transport-Security "max-age=15552000; includeSubDomains"
+  </If>
+</IfModule>
 
 # ----- Block access to sensitive files -----
 <FilesMatch "^\.(htaccess|htpasswd|env|git)">
